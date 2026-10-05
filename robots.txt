@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resireg.github.io/sitemap.xml

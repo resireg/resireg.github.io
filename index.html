@@ -1,23 +1,777 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Under Construction</title>
+
+  <title>ReSiReg: Spatially Consistent Semantics for Language-Conditioned Robotics</title>
+  <meta name="description" content="ReSiReg reconstructs spatially consistent, language-grounded vision features for robotic manipulation, open-vocabulary segmentation, and 3D semantic mapping. CoRL 2026.">
+  <meta name="keywords" content="ReSiReg, vision-language model, VLM, robotics, language-conditioned robotics, open-vocabulary segmentation, semantic mapping, feature reconstruction, CoRL 2026">
+  <meta name="author" content="Simon Schwaiger, David Seyser, Alessandro Scherl, Wilfried Wöber, Gerald Steinbauer-Wagner">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow">
+  <link rel="canonical" href="https://resireg.github.io/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ReSiReg">
+  <meta property="og:title" content="ReSiReg: Towards Spatially Consistent Semantics in Language-Conditioned Robotic Tasks">
+  <meta property="og:description" content="Spatially consistent dense vision-language features for robotic manipulation, segmentation, and 3D mapping.">
+  <meta property="og:url" content="https://resireg.github.io/">
+  <meta property="og:image" content="https://resireg.github.io/img/resireg_teaser_img.drawio.png">
+  <meta property="og:image:alt" content="ReSiReg improves spatial consistency for a gravel path language query across vision-language backbones.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ReSiReg — Spatially Consistent Vision-Language Features">
+  <meta name="twitter:description" content="Feature reconstruction for language-conditioned robotic tasks. CoRL 2026.">
+  <meta name="twitter:image" content="https://resireg.github.io/img/resireg_teaser_img.drawio.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "ReSiReg: Towards Spatially Consistent Semantics in Language-Conditioned Robotic Tasks",
+    "description": "ReSiReg reconstructs spatially consistent, language-grounded vision features for robotic manipulation, open-vocabulary segmentation, and 3D semantic mapping.",
+    "url": "https://resireg.github.io/",
+    "image": "https://resireg.github.io/img/resireg_teaser_img.drawio.png",
+    "datePublished": "2026-06-17",
+    "isPartOf": {
+      "@type": "PublicationEvent",
+      "name": "Conference on Robot Learning 2026"
+    },
+    "author": [
+      {"@type": "Person", "name": "Simon Schwaiger"},
+      {"@type": "Person", "name": "David Seyser"},
+      {"@type": "Person", "name": "Alessandro Scherl"},
+      {"@type": "Person", "name": "Wilfried Wöber"},
+      {"@type": "Person", "name": "Gerald Steinbauer-Wagner"}
+    ],
+    "sameAs": [
+      "https://arxiv.org/abs/2606.19088",
+      "https://github.com/SimonSchwaiger/resireg",
+      "https://huggingface.co/collections/SimonSchwaiger/spatially-consistent-vision-language-models-resireg",
+      "https://huggingface.co/spaces/SimonSchwaiger/resireg-playground"
+    ],
+    "keywords": [
+      "vision-language models",
+      "language-conditioned robotics",
+      "open-vocabulary semantic segmentation",
+      "semantic mapping",
+      "feature reconstruction"
+    ]
+  }
+  </script>
+
   <style>
-    body {
-      text-align: center;
-      font-family: sans-serif;
-      margin-top: 10%;
+    :root {
+      --ink: #17202a;
+      --muted: #52606d;
+      --line: #dce3e8;
+      --surface: #f6f8fa;
+      --blue-soft: #eaf2fb;
+      --blue: #245b88;
+      --blue-dark: #173f61;
+      --coral-soft: #fff0ee;
+      --coral: #c94f46;
+      --white: #ffffff;
+      --shadow: 0 16px 40px rgba(23, 32, 42, 0.08);
+      --radius: 18px;
+      --content: 1120px;
     }
-    img {
-      width: 64px;
-      height: 64px;
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--white);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--blue); text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; }
+    a:hover { color: var(--coral); }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid rgba(36, 91, 136, 0.35);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.65rem 1rem;
+      color: var(--white);
+      background: var(--ink);
+      transform: translateY(-160%);
+      transition: transform 160ms ease;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .container { width: min(calc(100% - 2.5rem), var(--content)); margin-inline: auto; }
+
+    .site-nav {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 1px solid rgba(220, 227, 232, 0.9);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .brand {
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .brand-mark { color: inherit; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .nav-links a { color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--ink); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 2.5rem 0 2rem;
+      text-align: center;
+    }
+    .hero::before {
+      position: absolute;
+      z-index: -1;
+      top: -22rem;
+      left: 50%;
+      width: 70rem;
+      height: 50rem;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 65%, rgba(218, 232, 246, 0.9), transparent 46%),
+        radial-gradient(circle at 65% 55%, rgba(255, 224, 220, 0.7), transparent 42%);
+      content: "";
+      mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%);
+      transform: translateX(-50%);
+    }
+    .eyebrow {
+      display: inline-flex;
+      min-height: 2.35rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      margin: 1rem 0 0;
+      padding: 0.45rem 1rem;
+      border: 1px solid #f0c4bf;
+      border-radius: 999px;
+      color: #8c3731;
+      background: rgba(255, 240, 238, 0.85);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    h1, h2, h3 {
+      margin-top: 0;
+      color: var(--ink);
+      line-height: 1.16;
+      letter-spacing: -0.035em;
+    }
+    h1 {
+      max-width: 980px;
+      margin-inline: auto;
+      margin-bottom: 1rem;
+      font-size: clamp(1.9rem, 3vw, 2.65rem);
+      font-weight: 900;
+    }
+    .title-accent { color: var(--blue); }
+    .subtitle {
+      max-width: 780px;
+      margin: 1.25rem auto 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+      line-height: 1.55;
+    }
+    .authors {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem 0.7rem;
+      max-width: 870px;
+      margin: 0 auto 0.75rem;
+      font-size: 1.1rem;
+      line-height: 1.4;
+    }
+    .authors span {
+      display: inline-flex;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+    .authors sup {
+      position: relative;
+      top: -0.4em;
+      font-size: 0.65em;
+      line-height: 0;
+      vertical-align: baseline;
+    }
+    .affiliations {
+      max-width: 800px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .affiliations span {
+      display: inline-block;
+      margin-inline: 0.35rem;
+    }
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.7rem;
+      margin: 1rem auto 0;
+    }
+    .button {
+      display: inline-flex;
+      min-height: 2.8rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 0.68rem 1rem;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: #eef1f3;
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+    .button:hover {
+      color: var(--ink);
+      background: #dfe4e8;
+      box-shadow: 0 8px 18px rgba(23, 32, 42, 0.1);
+      transform: translateY(-2px);
+    }
+    .button.secondary {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: #eef1f3;
+    }
+    .button.secondary:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: #dfe4e8;
+    }
+    .hero-figure {
+      width: min(100%, 820px);
+      margin: 1.5rem auto 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .hero-figure img { margin-inline: auto; }
+    figure { margin-inline: 0; }
+    figcaption {
+      margin-top: 0.8rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    section { padding: 5.5rem 0; }
+    section:nth-of-type(odd) { background: var(--surface); }
+    .section-heading {
+      max-width: 780px;
+      margin: 0 auto 2.75rem;
+      text-align: center;
+    }
+    .section-kicker {
+      margin: 0 0 0.55rem;
+      color: var(--coral);
+      font-size: 1rem;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h2 {
+      margin-bottom: 0.9rem;
+      font-size: clamp(1.55rem, 2.4vw, 2rem);
+      font-weight: 850;
+    }
+    .section-lead { margin: 0; color: var(--muted); font-size: 1.05rem; }
+    .abstract {
+      max-width: 870px;
+      margin: auto;
+      color: #35424e;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      text-align: center;
+      text-wrap: pretty;
+    }
+    .highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .highlight {
+      padding: 1.45rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--white);
+    }
+    .highlight strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--blue-dark);
+      font-size: 1.15rem;
+    }
+    .highlight p, .metric-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.95fr);
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .figure-frame {
+      overflow: hidden;
+      padding: 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: 0 10px 30px rgba(23, 32, 42, 0.06);
+    }
+    .method-figure {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .steps {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: method;
+    }
+    .steps li {
+      position: relative;
+      margin-bottom: 1.25rem;
+      padding-left: 3rem;
+      color: var(--muted);
+      counter-increment: method;
+    }
+    .steps li::before {
+      position: absolute;
+      top: 0.05rem;
+      left: 0;
+      display: grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border: 1px solid #bfd3e6;
+      border-radius: 50%;
+      color: var(--blue-dark);
+      background: var(--blue-soft);
+      content: counter(method, lower-alpha) ")";
+      font-size: 0.95rem;
+      font-weight: 850;
+    }
+    .steps strong { display: block; color: var(--ink); }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .metric {
+      min-height: 100%;
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--white);
+    }
+    .metric-value {
+      display: block;
+      color: var(--coral);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+    .metric-label {
+      display: block;
+      margin: 0.65rem 0 0.3rem;
+      color: var(--ink);
+      font-weight: 800;
+    }
+    .metric-note { font-size: 0.95rem; line-height: 1.55; }
+    .wide-figure { margin: 0; }
+    .wide-figure + .wide-figure { margin-top: 2rem; }
+    .subsection-heading {
+      margin: 3rem 0 1.25rem;
+      font-size: clamp(1.3rem, 2vw, 1.65rem);
+      text-align: center;
+    }
+    .figure-frame .subsection-heading { margin: 0.75rem 0 1.5rem; }
+
+    .model-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 2.2rem;
+      border: 1px solid #bdd2e4;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #edf5fc 0%, #fff 70%);
+    }
+    .model-panel h3 { margin-bottom: 0.6rem; font-size: 1.55rem; }
+    .model-panel p { max-width: 720px; margin: 0; color: var(--muted); }
+
+    .demo-shell {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .demo-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 0.9rem;
+    }
+    .demo-toolbar strong { color: var(--ink); }
+    .demo-frame {
+      display: block;
+      width: 100%;
+      height: min(78vh, 850px);
+      min-height: 620px;
+      border: 0;
+      background: var(--white);
+    }
+
+    .citation-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 0.75rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+    }
+    pre {
+      overflow-x: auto;
+      margin: 0;
+      padding: 0.5rem;
+      color: var(--ink);
+      font: 0.9rem/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      white-space: pre;
+    }
+    .copy-button {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #aeb8c0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #eef1f3;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+    .copy-button:hover { background: #dfe4e8; }
+    footer {
+      padding: 2.2rem 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    footer p { margin: 0.25rem 0; }
+
+    @media (max-width: 850px) {
+      .nav-links li:not(:last-child) { display: none; }
+      .hero { padding-top: 2.5rem; }
+      .highlights, .method-grid, .results-grid { grid-template-columns: 1fr; }
+      .method-grid { gap: 1.5rem; }
+      .model-panel { grid-template-columns: 1fr; gap: 1.5rem; }
+      .model-panel .link-row { justify-content: flex-start; margin: 0; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .container { width: min(calc(100% - 1.4rem), var(--content)); }
+      section { padding: 4rem 0; }
+      .hero { padding-top: 2rem; }
+      h1 { font-size: clamp(1.9rem, 8.8vw, 2.35rem); }
+      .figure-frame { padding: 0.35rem; border-radius: 10px; }
+      .demo-frame { height: 700px; min-height: 0; }
+      .citation-grid { grid-template-columns: 1fr; }
+      .copy-button { justify-self: start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
+
 <body>
-  <img src="https://github.githubassets.com/images/icons/emoji/unicode/1f477.png" alt="Builder">
-  <h1>Under Construction</h1>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="ReSiReg home">ReSi<span class="brand-mark">Reg</span></a>
+      <ul class="nav-links">
+        <li><a href="#method">Method</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#citation">Citation</a></li>
+        <li><a href="https://github.com/SimonSchwaiger/resireg" target="_blank" rel="noopener">Code ↗</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="container">
+      <h1>ReSiReg: Towards <span class="title-accent">Spatially Consistent</span> Semantics in Language-Conditioned Robotic Tasks</h1>
+
+      <p class="authors" aria-label="Authors">
+        <span>Simon Schwaiger<sup>1,2</sup></span>
+        <span>David Seyser<sup>2</sup></span>
+        <span>Alessandro Scherl<sup>2,3</sup></span>
+        <span>Wilfried Wöber<sup>4</sup></span>
+        <span>Gerald Steinbauer-Wagner<sup>1</sup></span>
+      </p>
+      <p class="affiliations">
+        <span><sup>1</sup> Graz University of Technology</span>
+        <span><sup>2</sup> University of Applied Sciences Technikum Wien</span><br>
+        <span><sup>3</sup> University of Alicante</span>
+        <span><sup>4</sup> University of Natural Resources and Life Sciences Vienna</span>
+      </p>
+      <p class="eyebrow">CoRL 2026</p>
+
+      <div class="link-row" aria-label="Project links">
+        <a class="button" href="https://arxiv.org/pdf/2606.19088" rel="noopener">📄 Paper</a>
+        <a class="button" href="https://arxiv.org/abs/2606.19088" rel="noopener">🔗 arXiv</a>
+        <a class="button" href="https://github.com/SimonSchwaiger/resireg" rel="noopener">💻 Code</a>
+        <a class="button" href="https://huggingface.co/SimonSchwaiger/resireg_mini" rel="noopener">🤗 Model</a>
+        <a class="button" href="https://huggingface.co/collections/SimonSchwaiger/spatially-consistent-vision-language-models-resireg" rel="noopener">🤗 Collection</a>
+        <a class="button" href="https://huggingface.co/spaces/SimonSchwaiger/resireg-playground" rel="noopener">🎮 Demo</a>
+      </div>
+
+      <figure class="hero-figure">
+        <img src="img/resireg_teaser_img.drawio.png" width="1024" height="270"
+          alt="Comparison of backbone, self-calibration, OTAS, ReSiReg Lite, and ReSiReg Full features for an outdoor bridge scene and the query gravel path."
+          fetchpriority="high">
+      </figure>
+      <p class="subtitle">
+        A feature reconstruction method that turns noisy dense vision-language embeddings into spatially consistent, language-grounded representations.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section id="abstract">
+      <div class="container">
+        <div class="section-heading">
+          <h2>Abstract</h2>
+        </div>
+        <p class="abstract">
+          Vision-Language Models (VLMs) enable robots to follow open-language instructions. However, dense VLM embeddings have shown to be noisy and lack spatial consistency. This is problematic for robotic applications, which require simultaneous reasoning over semantics and 3D space. We examine spatial structure across recent VLMs and propose ReSiReg, a feature reconstruction method that uses spatially consistent VLM intermediates to improve dense language-grounded retrieval. ReSiReg clusters intermediates into visual prototypes, derives their language descriptors, and reconstructs each patch as a soft mixture of prototype-level language embeddings. We evaluate quantitatively on open-vocabulary semantic segmentation and 3D mapping across backbones, and qualitatively in real-world manipulation scenes. Quantitative results show improved dense retrieval; manipulation scenes show more spatially consistent target activations. We further provide a compact 25M dense VLM for robotic applications, substantially smaller than and competitive with ViT-B baselines.
+        </p>
+
+        <div class="highlights" aria-label="Research highlights">
+          <article class="highlight">
+            <strong>Backbone-agnostic</strong>
+            <p>Applies post hoc to recent VLM families using spatial structure already present in their intermediate features.</p>
+          </article>
+          <article class="highlight">
+            <strong>No added parameters</strong>
+            <p>Reconstructs dense output features from visual prototypes without increasing the underlying model size.</p>
+          </article>
+          <article class="highlight">
+            <strong>Robot-ready</strong>
+            <p>Supports online 2D retrieval and 3D aggregation, with ReSiReg Lite exceeding 30 FPS in batched Jetson inference.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Method</p>
+          <h2>From visual prototypes to language embeddings</h2>
+          <p class="section-lead">ReSiReg transfers spatial structure from model intermediates into the model’s language-grounded feature space.</p>
+        </div>
+
+        <div class="method-grid">
+          <figure class="figure-frame method-figure">
+            <img src="img/resireg_method_overview.drawio.png" width="1024" height="620" loading="lazy"
+              alt="ReSiReg pipeline: foundation model probing, visual prototype clustering, masked pooling, and prototype-reconstructed language embedding.">
+          </figure>
+
+          <ol class="steps">
+            <li><strong>Probe one VLM</strong>Extract spatially consistent intermediate tokens and language-aligned output tokens from the same frozen model.</li>
+            <li><strong>Discover prototypes</strong>Reduce and cluster intermediate tokens into hard assignments and soft patch-to-prototype affinities.</li>
+            <li><strong>Ground in language</strong>Pool output tokens over each visual prototype, optionally using a segmentation prior.</li>
+            <li><strong>Reconstruct softly</strong>Represent each patch as a mixture of prototype-level language embeddings for smooth, coherent retrieval.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Results</p>
+          <h2>Consistent gains across backbones and tasks</h2>
+          <p class="section-lead">Evaluated on 2D open-vocabulary segmentation, 3D semantic mapping, and real-world manipulation scenes.</p>
+        </div>
+
+        <div class="results-grid">
+          <article class="metric">
+            <span class="metric-value">+4.12</span>
+            <span class="metric-label">average mIoU points on ORAD-3D</span>
+            <p class="metric-note">ReSiReg Full average gain across evaluated backbones for outdoor open-vocabulary semantic segmentation.</p>
+          </article>
+          <article class="metric">
+            <span class="metric-value">+9.78</span>
+            <span class="metric-label">mIoU points on RADIOv4</span>
+            <p class="metric-note">The largest reported ORAD-3D gain, improving a RADIOv4 + SigLIP 2 dense backbone from 19.11 to 28.89 mIoU.</p>
+          </article>
+          <article class="metric">
+            <span class="metric-value">25M</span>
+            <span class="metric-label">parameters in ReSiReg Mini</span>
+            <p class="metric-note">A compact dense VLM built for robotic deployment, substantially smaller than ViT-B alternatives.</p>
+          </article>
+          <article class="metric">
+            <span class="metric-value">&gt;30 FPS</span>
+            <span class="metric-label">batched embedded throughput</span>
+            <p class="metric-note">ReSiReg Lite and the compact backbone surpass real-time throughput on NVIDIA Jetson Orin.</p>
+          </article>
+        </div>
+
+        <figure class="figure-frame wide-figure">
+          <h3 class="subsection-heading">Qualitative Manipulation Results</h3>
+          <img src="img/resireg_appendix_qualitative.drawio.png" width="1024" height="681" loading="lazy"
+            alt="Qualitative comparison across EUPE, CLIP, RADIOv3, and dino.txt showing improved spatial consistency and transparent bottle similarity after ReSiReg reconstruction.">
+        </figure>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Interactive playground</p>
+          <h2>Try ReSiReg in your browser</h2>
+          <p class="section-lead">Explore common robotics tasks with ReSiReg Mini. The demo is hosted on Hugging Face Spaces.</p>
+        </div>
+
+        <div class="demo-shell">
+          <div class="demo-toolbar">
+            <strong>ReSiReg Playground</strong>
+            <a href="https://huggingface.co/spaces/SimonSchwaiger/resireg-playground" rel="noopener">Open full screen ↗</a>
+          </div>
+          <iframe class="demo-frame"
+            src="https://simonschwaiger-resireg-playground.hf.space"
+            title="Interactive ReSiReg Playground hosted on Hugging Face Spaces"
+            loading="lazy"
+            allow="clipboard-write; fullscreen"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <noscript>
+          <p><a href="https://huggingface.co/spaces/SimonSchwaiger/resireg-playground">Open the ReSiReg Playground on Hugging Face.</a></p>
+        </noscript>
+      </div>
+    </section>
+
+    <section id="citation">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Citation</p>
+          <h2>Cite ReSiReg</h2>
+          <p class="section-lead">If ReSiReg supports your research, please cite the arXiv preprint.</p>
+        </div>
+
+        <div class="citation-grid">
+          <pre id="bibtex"><code>@misc{schwaiger2026resireg,
+  title     = {ReSiReg: Towards Spatially Consistent Semantics in
+               Language-Conditioned Robotic Tasks},
+  author    = {Schwaiger, Simon and Seyser, David and Scherl, Alessandro
+               and W{\"o}ber, Wilfried and Steinbauer-Wagner, Gerald},
+  year      = {2026},
+  eprint    = {2606.19088},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url       = {https://arxiv.org/abs/2606.19088}
+}</code></pre>
+          <button class="copy-button" type="button" data-copy-target="bibtex">Copy BibTeX</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 ReSiReg authors · Conference on Robot Learning 2026</p>
+      <p>Built for the robotics community. Page design inspired by the <a href="https://nerfies.github.io/" rel="noopener">Nerfies</a> research template.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll("[data-copy-target]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.innerText);
+          const previousLabel = button.textContent;
+          button.textContent = "Copied";
+          window.setTimeout(() => { button.textContent = previousLabel; }, 1800);
+        } catch {
+          button.textContent = "Select and copy";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
