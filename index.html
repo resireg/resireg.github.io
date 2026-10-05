@@ -302,17 +302,17 @@
       text-align: left;
     }
 
-    section { padding: 5.5rem 0; }
+    section { padding: 4.25rem 0; }
     section:nth-of-type(odd) { background: var(--surface); }
     .section-heading {
       max-width: 780px;
-      margin: 0 auto 2.75rem;
+      margin: 0 auto 2.25rem;
       text-align: center;
     }
     .section-kicker {
       margin: 0 0 0.55rem;
       color: var(--coral);
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 850;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -415,7 +415,6 @@
       margin-bottom: 2.5rem;
     }
     .metric {
-      min-height: 100%;
       padding: 1.5rem;
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -424,9 +423,9 @@
     .metric-value {
       display: block;
       color: var(--coral);
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
-      font-weight: 900;
-      letter-spacing: -0.045em;
+      font-size: clamp(1.3rem, 1.7vw, 1.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
       line-height: 1;
     }
     .metric-label {
@@ -535,9 +534,11 @@
     }
 
     @media (max-width: 560px) {
+      html { scroll-padding-top: 0; }
       body { font-size: 16px; }
+      .site-nav { display: none; }
       .container { width: min(calc(100% - 1.4rem), var(--content)); }
-      section { padding: 4rem 0; }
+      section { padding: 3.25rem 0; }
       .hero { padding-top: 2rem; }
       h1 { font-size: clamp(1.9rem, 8.8vw, 2.35rem); }
       .figure-frame { padding: 0.35rem; border-radius: 10px; }
