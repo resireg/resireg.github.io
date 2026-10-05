@@ -308,6 +308,20 @@
       color: var(--ink);
       background: #dfe4e8;
     }
+    .button.related-work {
+      position: relative;
+      margin-left: 0.55rem;
+    }
+    .button.related-work::before {
+      position: absolute;
+      top: 0.45rem;
+      bottom: 0.45rem;
+      left: -0.625rem;
+      width: 1px;
+      background: #aeb8c0;
+      content: "";
+      pointer-events: none;
+    }
     .hero-figure {
       width: min(100%, 820px);
       margin: 1.5rem auto 0;
@@ -554,6 +568,8 @@
       .method-grid { gap: 1.5rem; }
       .model-panel { grid-template-columns: 1fr; gap: 1.5rem; }
       .model-panel .link-row { justify-content: flex-start; margin: 0; }
+      .button.related-work { margin-left: 0; }
+      .button.related-work::before { display: none; }
     }
 
     @media (max-width: 560px) {
@@ -617,8 +633,8 @@
         <a class="button" href="https://arxiv.org/abs/2606.19088" rel="noopener">🔗 arXiv</a>
         <a class="button" href="https://github.com/SimonSchwaiger/resireg" rel="noopener">💻 Code</a>
         <a class="button" href="https://huggingface.co/SimonSchwaiger/resireg_mini" rel="noopener">🤗 Model</a>
-        <a class="button" href="https://huggingface.co/collections/SimonSchwaiger/spatially-consistent-vision-language-models-resireg" rel="noopener">🤗 Collection</a>
         <a class="button" href="https://huggingface.co/spaces/SimonSchwaiger/resireg-playground" rel="noopener">🎮 Demo</a>
+        <a class="button related-work" href="https://github.com/SimonSchwaiger/resireg-traversability" target="_blank" rel="noopener">💻 Traversability Estimation</a>
       </div>
 
       <figure class="hero-figure">
