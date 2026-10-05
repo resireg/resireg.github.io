@@ -8,9 +8,20 @@
   <meta name="description" content="ReSiReg reconstructs spatially consistent, language-grounded vision features for robotic manipulation, open-vocabulary segmentation, and 3D semantic mapping. CoRL 2026.">
   <meta name="keywords" content="ReSiReg, vision-language model, VLM, robotics, language-conditioned robotics, open-vocabulary segmentation, semantic mapping, feature reconstruction, CoRL 2026">
   <meta name="author" content="Simon Schwaiger, David Seyser, Alessandro Scherl, Wilfried Wöber, Gerald Steinbauer-Wagner">
+  <meta name="citation_title" content="ReSiReg: Towards Spatially Consistent Semantics in Language-Conditioned Robotic Tasks">
+  <meta name="citation_author" content="Simon Schwaiger">
+  <meta name="citation_author" content="David Seyser">
+  <meta name="citation_author" content="Alessandro Scherl">
+  <meta name="citation_author" content="Wilfried Wöber">
+  <meta name="citation_author" content="Gerald Steinbauer-Wagner">
+  <meta name="citation_publication_date" content="2026/06/17">
+  <meta name="citation_arxiv_id" content="arXiv:2606.19088">
+  <meta name="citation_abstract_html_url" content="https://resireg.github.io/">
+  <meta name="citation_language" content="en">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow">
   <link rel="canonical" href="https://resireg.github.io/">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ReSiReg">
@@ -58,6 +69,18 @@
       "semantic mapping",
       "feature reconstruction"
     ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://resireg.github.io/#website",
+    "url": "https://resireg.github.io/",
+    "name": "ReSiReg",
+    "alternateName": "ReSiReg Project Page",
+    "description": "Project page for ReSiReg, a feature reconstruction method for spatially consistent semantics in language-conditioned robotic tasks.",
+    "inLanguage": "en"
   }
   </script>
 
@@ -651,7 +674,7 @@
           </figure>
 
           <ol class="steps">
-            <li><strong>Proble VLM</strong>Extract spatially consistent intermediate tokens and language-aligned output tokens from the same frozen model.</li>
+            <li><strong>Probe VLM</strong>Extract spatially consistent intermediate tokens and language-aligned output tokens from the same frozen model.</li>
             <li><strong>Discover Prototypes</strong>Reduce and cluster intermediate tokens into hard assignments and soft patch-to-prototype affinities.</li>
             <li><strong>Ground in Language</strong>Pool output tokens over each visual prototype, optionally incorporating a segmentation prior.</li>
             <li><strong>Reconstruct Softly</strong>Represent each patch as a mixture of prototype-level language embeddings for spatial consistency.</li>
