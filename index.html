@@ -603,7 +603,7 @@
           fetchpriority="high">
       </figure>
       <p class="subtitle">
-        A feature reconstruction method that turns noisy dense vision-language embeddings into spatially consistent, language-grounded representations.
+        ReSiReg is a feature reconstruction method that turns noisy dense vision-language embeddings into spatially consistent, language-grounded representations. Based on our findings, we also provide a densely grounded Vit-S sized VLM with only 25M parameters in the vision path for robotic applications.
       </p>
     </div>
   </header>
@@ -620,16 +620,16 @@
 
         <div class="highlights" aria-label="Research highlights">
           <article class="highlight">
-            <strong>Backbone-agnostic</strong>
+            <strong>Backbone-Agnostic</strong>
             <p>Applies post hoc to recent VLM families using spatial structure already present in their intermediate features.</p>
           </article>
           <article class="highlight">
-            <strong>No added parameters</strong>
+            <strong>No Added Parameters</strong>
             <p>Reconstructs dense output features from visual prototypes without increasing the underlying model size.</p>
           </article>
           <article class="highlight">
-            <strong>Robot-ready</strong>
-            <p>Supports online 2D retrieval and 3D aggregation, with ReSiReg Lite exceeding 30 FPS in batched Jetson inference.</p>
+            <strong>Robot-Ready</strong>
+            <p>Supports online 2D and 3D robotics tasks, with our 25M VLM exceeding 30 FPS in batched Jetson inference.</p>
           </article>
         </div>
       </div>
@@ -640,7 +640,7 @@
         <div class="section-heading">
           <p class="section-kicker">Method</p>
           <h2>From visual prototypes to language embeddings</h2>
-          <p class="section-lead">ReSiReg transfers spatial structure from model intermediates into the model’s language-grounded feature space.</p>
+          <p class="section-lead">ReSiReg transfers spatial structure from model intermediates into the model’s language-grounded feature space through soft clustering and reconstruction.</p>
         </div>
 
         <div class="method-grid">
@@ -650,10 +650,10 @@
           </figure>
 
           <ol class="steps">
-            <li><strong>Probe one VLM</strong>Extract spatially consistent intermediate tokens and language-aligned output tokens from the same frozen model.</li>
-            <li><strong>Discover prototypes</strong>Reduce and cluster intermediate tokens into hard assignments and soft patch-to-prototype affinities.</li>
-            <li><strong>Ground in language</strong>Pool output tokens over each visual prototype, optionally using a segmentation prior.</li>
-            <li><strong>Reconstruct softly</strong>Represent each patch as a mixture of prototype-level language embeddings for smooth, coherent retrieval.</li>
+            <li><strong>Proble VLM</strong>Extract spatially consistent intermediate tokens and language-aligned output tokens from the same frozen model.</li>
+            <li><strong>Discover Prototypes</strong>Reduce and cluster intermediate tokens into hard assignments and soft patch-to-prototype affinities.</li>
+            <li><strong>Ground in Language</strong>Pool output tokens over each visual prototype, optionally incorporating a segmentation prior.</li>
+            <li><strong>Reconstruct Softly</strong>Represent each patch as a mixture of prototype-level language embeddings for spatial consistency.</li>
           </ol>
         </div>
       </div>
@@ -663,8 +663,8 @@
       <div class="container">
         <div class="section-heading">
           <p class="section-kicker">Results</p>
-          <h2>Consistent gains across backbones and tasks</h2>
-          <p class="section-lead">Evaluated on 2D open-vocabulary segmentation, 3D semantic mapping, and real-world manipulation scenes.</p>
+          <h2>Evaluation across backbones and tasks</h2>
+          <p class="section-lead">Quantitatively evaluated on 2D open-vocabulary segmentation and 3D semantic mapping, with qualitative evaluations on real-world manipulation scenes.</p>
         </div>
 
         <div class="results-grid">
@@ -676,17 +676,17 @@
           <article class="metric">
             <span class="metric-value">+9.78</span>
             <span class="metric-label">mIoU points on RADIOv4</span>
-            <p class="metric-note">The largest reported ORAD-3D gain, improving a RADIOv4 + SigLIP 2 dense backbone from 19.11 to 28.89 mIoU.</p>
+            <p class="metric-note">The largest reported ORAD-3D gain, improving a RADIOv4 + modified SigLIP 2 dense backbone from 19.11 to 28.89 mIoU.</p>
           </article>
           <article class="metric">
             <span class="metric-value">25M</span>
-            <span class="metric-label">parameters in ReSiReg Mini</span>
-            <p class="metric-note">A compact dense VLM built for robotic deployment, substantially smaller than ViT-B alternatives.</p>
+            <span class="metric-label">parameters in ReSiReg Mini vision path</span>
+            <p class="metric-note">A compact dense VLM built for robotic deployment, substantially smaller than and competitive with ViT-B alternatives.</p>
           </article>
           <article class="metric">
             <span class="metric-value">&gt;30 FPS</span>
             <span class="metric-label">batched embedded throughput</span>
-            <p class="metric-note">ReSiReg Lite and the compact backbone surpass real-time throughput on NVIDIA Jetson Orin.</p>
+            <p class="metric-note">ReSiReg Lite and the compact ReSiReg Mini backbone surpass real-time throughput on NVIDIA Jetson Orin.</p>
           </article>
         </div>
 
@@ -729,7 +729,7 @@
         <div class="section-heading">
           <p class="section-kicker">Citation</p>
           <h2>Cite ReSiReg</h2>
-          <p class="section-lead">If ReSiReg supports your research, please cite the arXiv preprint.</p>
+          <p class="section-lead">If ReSiReg supports your research, please cite our work.</p>
         </div>
 
         <div class="citation-grid">
@@ -752,8 +752,8 @@
 
   <footer>
     <div class="container">
-      <p>© 2026 ReSiReg authors · Conference on Robot Learning 2026</p>
-      <p>Built for the robotics community. Page design inspired by the <a href="https://nerfies.github.io/" rel="noopener">Nerfies</a> research template.</p>
+      <p>© 2026 ReSiReg Authors</p>
+      <p>Built for the robotics community. Page design inspired by the <a href="https://nerfies.github.io/" rel="noopener">Nerfies</a> template.</p>
     </div>
   </footer>
 
