@@ -553,7 +553,14 @@
       font: 0.9rem/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       white-space: pre;
     }
+    .citation-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
     .copy-button {
+      min-height: 2.35rem;
       padding: 0.5rem 0.75rem;
       border: 1px solid #aeb8c0;
       border-radius: 8px;
@@ -563,8 +570,31 @@
       font: inherit;
       font-size: 0.9rem;
       font-weight: 800;
+      line-height: 1;
     }
     .copy-button:hover { background: #dfe4e8; }
+    .star-button {
+      display: inline-flex;
+      min-height: 2.35rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid #aeb8c0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: #eef1f3;
+      font-size: 0.86rem;
+      font-weight: 800;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .star-button:hover {
+      color: var(--ink);
+      background: #dfe4e8;
+    }
+    .star-button img { width: auto; height: 1.25rem; }
     footer {
       padding: 2.2rem 0;
       border-top: 1px solid var(--line);
@@ -597,6 +627,11 @@
       .demo-frame { height: 700px; min-height: 0; }
       .citation-grid { grid-template-columns: 1fr; }
       .copy-button { justify-self: start; }
+      .citation-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-self: start;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -808,7 +843,13 @@
   url       = {https://arxiv.org/abs/2606.19088},
   doi       = {10.48550/arXiv.2606.19088}
 }</code></pre>
-          <button class="copy-button" type="button" data-copy-target="bibtex">Copy BibTeX</button>
+          <div class="citation-actions">
+            <button class="copy-button" type="button" data-copy-target="bibtex">Copy BibTeX</button>
+            <a class="star-button" href="https://github.com/SimonSchwaiger/resireg" target="_blank" rel="noopener">
+              ⭐ Star on GitHub
+              <img src="https://img.shields.io/github/stars/SimonSchwaiger/resireg?style=flat&amp;label=&amp;color=dfe4e8" alt="ReSiReg GitHub star count" loading="lazy">
+            </a>
+          </div>
         </div>
 
         <div class="citation-grid" aria-label="Traversability estimation citation">
@@ -826,7 +867,13 @@
   url       = {https://arxiv.org/abs/2610.02974},
   doi       = {10.48550/arXiv.2610.02974}
 }</code></pre>
-          <button class="copy-button" type="button" data-copy-target="bibtex-traversability">Copy BibTeX</button>
+          <div class="citation-actions">
+            <button class="copy-button" type="button" data-copy-target="bibtex-traversability">Copy BibTeX</button>
+            <a class="star-button" href="https://github.com/SimonSchwaiger/resireg-traversability" target="_blank" rel="noopener">
+              ⭐ Star on GitHub
+              <img src="https://img.shields.io/github/stars/SimonSchwaiger/resireg-traversability?style=flat&amp;label=&amp;color=dfe4e8" alt="Traversability estimation GitHub star count" loading="lazy">
+            </a>
+          </div>
         </div>
 
         <div class="citation-grid" aria-label="OTAS citation">
@@ -840,7 +887,13 @@
   doi       = {10.1109/ICRA57385.2026.11696067},
   url       = {https://doi.org/10.1109/ICRA57385.2026.11696067}
 }</code></pre>
-          <button class="copy-button" type="button" data-copy-target="bibtex-otas">Copy BibTeX</button>
+          <div class="citation-actions">
+            <button class="copy-button" type="button" data-copy-target="bibtex-otas">Copy BibTeX</button>
+            <a class="star-button" href="https://github.com/SimonSchwaiger/otas" target="_blank" rel="noopener">
+              ⭐ Star on GitHub
+              <img src="https://img.shields.io/github/stars/SimonSchwaiger/otas?style=flat&amp;label=&amp;color=dfe4e8" alt="OTAS GitHub star count" loading="lazy">
+            </a>
+          </div>
         </div>
       </div>
     </section>
