@@ -16,6 +16,7 @@
   <meta name="citation_author" content="Gerald Steinbauer-Wagner">
   <meta name="citation_publication_date" content="2026/06/17">
   <meta name="citation_arxiv_id" content="arXiv:2606.19088">
+  <meta name="citation_doi" content="10.48550/arXiv.2606.19088">
   <meta name="citation_abstract_html_url" content="https://resireg.github.io/">
   <meta name="citation_language" content="en">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -45,6 +46,11 @@
     "url": "https://resireg.github.io/",
     "image": "https://resireg.github.io/img/resireg_teaser_img.drawio.png",
     "datePublished": "2026-06-17",
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "DOI",
+      "value": "10.48550/arXiv.2606.19088"
+    },
     "isPartOf": {
       "@type": "PublicationEvent",
       "name": "Conference on Robot Learning 2026"
@@ -360,6 +366,12 @@
       font-weight: 850;
     }
     .section-lead { margin: 0; color: var(--muted); font-size: 1.05rem; }
+    .citation-note {
+      margin: 0.75rem 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
     .abstract {
       max-width: 870px;
       margin: auto;
@@ -532,6 +544,7 @@
       border-radius: 12px;
       background: var(--white);
     }
+    .citation-grid + .citation-grid { margin-top: 1rem; }
     pre {
       overflow-x: auto;
       margin: 0;
@@ -770,6 +783,15 @@
           <p class="section-kicker">Citation</p>
           <h2>Cite ReSiReg</h2>
           <p class="section-lead">If ReSiReg supports your research, please cite our work.</p>
+          <p class="citation-note">
+            Two closely related works complement ReSiReg:
+            <a href="https://arxiv.org/abs/2610.02974" rel="noopener"><cite>From Language Priors to Field Adaptation: Preference Learning for Traversability Estimation</cite></a>
+            learns traversability preferences directly in the ReSiReg Mini feature space, enabling sample-efficient domain adaptation.
+            <a href="https://otas-segmentation.github.io/" rel="noopener"><cite>OTAS</cite></a>
+            is a methodological precursor to ReSiReg's alignment mechanism for open-vocabulary semantic segmentation and reconstruction.
+            It can be viewed as a hard-clustering variant of ReSiReg, with DINOv2 providing
+            <em>f</em><sub>v</sub> and CLIP providing <em>f</em><sub>vl</sub>.
+          </p>
         </div>
 
         <div class="citation-grid">
@@ -783,9 +805,42 @@
   eprint    = {2606.19088},
   archivePrefix = {arXiv},
   primaryClass  = {cs.RO},
-  url       = {https://arxiv.org/abs/2606.19088}
+  url       = {https://arxiv.org/abs/2606.19088},
+  doi       = {10.48550/arXiv.2606.19088}
 }</code></pre>
           <button class="copy-button" type="button" data-copy-target="bibtex">Copy BibTeX</button>
+        </div>
+
+        <div class="citation-grid" aria-label="Traversability estimation citation">
+          <pre id="bibtex-traversability"><code>@article{schwaiger2026traversability,
+  title     = {From Language Priors to Field Adaptation:
+               Preference Learning for Traversability Estimation},
+  author    = {Schwaiger, Simon and Seyser, David and Scherl, Alessandro
+               and Ajanovi{\'c}, Zlatan and W{\"o}ber, Wilfried
+               and Steinbauer-Wagner, Gerald},
+  journal   = {arXiv preprint arXiv:2610.02974},
+  year      = {2026},
+  eprint    = {2610.02974},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url       = {https://arxiv.org/abs/2610.02974},
+  doi       = {10.48550/arXiv.2610.02974}
+}</code></pre>
+          <button class="copy-button" type="button" data-copy-target="bibtex-traversability">Copy BibTeX</button>
+        </div>
+
+        <div class="citation-grid" aria-label="OTAS citation">
+          <pre id="bibtex-otas"><code>@inproceedings{schwaiger2026otas,
+  author    = {Schwaiger, Simon and Thalhammer, Stefan and W{\"o}ber, Wilfried
+               and Steinbauer-Wagner, Gerald},
+  title     = {{OTAS}: Open-vocabulary Token Alignment for Outdoor Segmentation},
+  booktitle = {2026 IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2026},
+  pages     = {8707--8714},
+  doi       = {10.1109/ICRA57385.2026.11696067},
+  url       = {https://doi.org/10.1109/ICRA57385.2026.11696067}
+}</code></pre>
+          <button class="copy-button" type="button" data-copy-target="bibtex-otas">Copy BibTeX</button>
         </div>
       </div>
     </section>
