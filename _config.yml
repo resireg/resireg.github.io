@@ -1,0 +1,5 @@
+# GitHub Pages / Jekyll configuration.
+# Keep repository documentation out of the published site.
+exclude:
+  - README.md
+  - future_improvements.md
